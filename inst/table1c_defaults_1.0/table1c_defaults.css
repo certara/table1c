@@ -1,0 +1,65 @@
+.Rtable1 table, table.Rtable1 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 10pt;
+    border-collapse: collapse;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 1pt;
+}
+.Rtable1 th, .Rtable1 td {
+    background-color: white;
+    border: 0;
+    text-align: center;
+    padding: 0.1em 0.3em;
+    margin: 0px;
+    /*
+    border-left: 1pt solid black;
+    border-right: 1pt solid black;
+    */
+}
+.Rtable1 th.grouplabel {
+    padding-left: 0;
+    padding-right: 0;
+}
+/*
+.Rtable1 th.grouplabel>div {
+    margin-left: 1.5ex;
+    margin-right: 1.5ex;
+    border-bottom: 1pt solid black;
+}
+*/
+.Rtable1 th.grouplabel:last-child>div {
+    margin-right: 0;
+}
+.Rtable1 .rowlabel {
+    text-align: left;
+    padding-left: 1.0em;
+}
+.Rtable1 .varlabel {
+    font-weight: bold;
+}
+
+.Rtable1 thead>tr:first-child>th {
+    border-top: 2pt solid black;
+}
+.Rtable1 thead>tr:last-child>th {
+    border-bottom: 1pt solid black;
+}
+.Rtable1 tbody>tr:last-child>td {
+    border-bottom: 2pt solid black;
+}
+.Rtable1 .firstrow, .Rtable1 .firstrow ~ td {
+    padding-left: 0.1em;
+    /* border-top: 1pt solid black; */
+}
+.Rtable1 td {
+    white-space:nowrap;
+}
+
+/* Footnote */
+.Rtable1-footnote {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 9pt;
+    padding: 0px;
+    margin: 0px;
+}

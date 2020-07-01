@@ -1,0 +1,61 @@
+dataset:     Xyz-pk.csv
+
+labels:
+  sex:       Sex
+  race:      Race
+  ethnic:    Ethnicity
+  hv:        Healthy Volunteer
+  age:       Age (y)
+  agecat:    Age Group
+  wt:        Body Weight (kg)
+  ht:        Height (cm)
+  bmi:       BMI (kg/m²)
+  bsa:       BSA (m²)
+  alb:       Albumin (g/L)
+  alp:       ALP (U/L)
+  alt:       ALT (U/L)
+  ast:       AST (U/L)
+  bili:      Bilirubin (µmol/L)
+  crcl:      CrCL (mL/min)
+  fdarenal:  Renal Impairment, FDA Classification
+  form:      Formulation
+  fasted:    Fasting Status
+
+categoricals:
+  study:
+    - 1: Xyz-hv-01
+    - 2: Xyz-ri-02
+    - 7: Xyz-ph3-07
+  sex:
+    - 0: Male
+    - 1: Female
+  race:
+    - 1: White
+    - 2: Black or African American
+    - 3: Asian
+    - 4: American Indian or Alaskan Native
+    - 5: Native Hawaiian or Other Pacific Islander
+    - 6: Multiple or Other
+  ethnic:
+    - 1: Not Hispanic or Latino
+    - 2: Hispanic or Latino
+    - -99: Not reported
+  agecat:
+    - 0: < 65 years
+    - 1: "\u2265 65 years"
+  hv:
+    - 1: Healthy Subject
+    - 0: Patient
+  fdarenal:
+    - 0: Normal
+    - 1: Mild
+    - 2: Moderate
+    - 3: Severe
+  form:
+    - 1: Capsule
+    - 2: Tablet
+  fasted:
+    - 0: Fed
+    - 1: Fasted
+    - -99: Unknown
+

@@ -1,0 +1,354 @@
+---
+title:  "User Guide: How to Create Tables of Baseline Characteristics (Descriptive Statistics)"
+author: "Certara PMxO R Tools Workstream"
+date:   "`r format(Sys.Date(), '%d-%b-%Y')`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+
+vignette: >
+  %\VignetteIndexEntry{User Guide: How to Create Tables of Baseline Characteristics (Descriptive Statistics)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+options(width=80)
+set.seed(123)
+library(table1c, quietly=TRUE)
+```
+
+# Introduction
+
+The `table1c` package is a light wrapper around the package
+[table1](https://CRAN.R-project.org/package=table1), with some
+customizations for the convenience of Certara IDD.
+
+This vignette serves as User Guide for the package. We run through an example
+using a simulated dataset `Xyz-pk.csv` with data pooled from three hypothetical
+studies. This dataset is in the style of a NONMEM PopPK dataset. Click
+[here](Xyz-pk.csv) to download it (note: due to a [Chrome
+bug](https://stackoverflow.com/questions/56761809/downloading-opening-csv-file-using-google-chrome-it-changes-extension-of-csv)
+the file may download with a .xls extension, which is incorrect; find the file
+where it was saved and change it to .csv).
+
+(**Note:** The dataset has column names in all lower case letters, versus the
+more traditional upper case used in NONMEM. This is preferred because we end up
+typing these names a lot, and by avoiding the strain of multi-key combinations
+needed for capital letters it is not only faster to type, but also decreases
+the risk of [repetitive strain
+injury](https://www.nhs.uk/live-well/healthy-body/tips-to-prevent-rsi/).)
+
+# Using a Data Specification File
+
+One of the benefits of this package is the ability to separate meta-data (data
+about data) from scripting logic, by segregating meta-data into a central
+location (the data specification file), which results in scripts that are
+simpler, more generic and re-usable.
+
+The data specification is written in YAML (see below), a suitable language for
+encoding data or meta-data, which allows it to be clear and concise. (Note:
+currently this file needs to be written by hand, but in the future it's
+generation may be partially or fully automated.)
+
+## What is YAML?
+
+[YAML](https://yaml.org/) is a markup language for encoding structured data,
+similar to XML or JSON, but more geared towards human readability (you may
+already be familiar with YAML since it is used in the header of R markdown
+documents). It has the advantage of being both very easy for humans to read and
+write, as well as machine parseable (because although it looks natural, it
+actually has strict syntactic rules), with support in many popular languages,
+including R. You can edit YAML files in RStudio (with syntax highlighting).
+
+
+## The data specification file
+
+The way YAML works is best illustrated with an example. The current directory
+contains the file `data_spec.yaml` which contains the following:
+
+```yaml
+dataset:     Xyz-pk.csv
+
+labels:
+  sex:       Sex
+  race:      Race
+  ethnic:    Ethnicity
+  hv:        Healthy Volunteer
+  age:       Age (y)
+  agecat:    Age Group
+  wt:        Body Weight (kg)
+  ht:        Height (cm)
+  bmi:       BMI (kg/m²)
+  bsa:       BSA (m²)
+  alb:       Albumin (g/L)
+  alp:       ALP (U/L)
+  alt:       ALT (U/L)
+  ast:       AST (U/L)
+  bili:      Bilirubin (µmol/L)
+  crcl:      CrCL (mL/min)
+  fdarenal:  Renal Impairment, FDA Classification
+  form:      Formulation
+  fasted:    Fasting Status
+
+categoricals:
+  study:
+    - 1: Xyz-hv-01
+    - 2: Xyz-ri-02
+    - 7: Xyz-ph3-07
+  sex:
+    - 0: Male
+    - 1: Female
+  race:
+    - 1: White
+    - 2: Black or African American
+    - 3: Asian
+    - 4: American Indian or Alaskan Native
+    - 5: Native Hawaiian or Other Pacific Islander
+    - 6: Multiple or Other
+  ethnic:
+    - 1: Not Hispanic or Latino
+    - 2: Hispanic or Latino
+    - -99: Not reported
+  agecat:
+    - 0: < 65 years
+    - 1: "\u2265 65 years"
+  hv:
+    - 1: Healthy Subject
+    - 0: Patient
+  fdarenal:
+    - 0: Normal
+    - 1: Mild
+    - 2: Moderate
+    - 3: Severe
+  form:
+    - 1: Capsule
+    - 2: Tablet
+  fasted:
+    - 0: Fed
+    - 1: Fasted
+    - -99: Unknown
+```
+
+The meaning of the file contents is intuitively clear. Indentation is used to
+denote hierarchical structure. Line breaks separate items from each other.
+Other whitespace is mostly ignored (except inside strings). Data structures
+come in 2 forms: sequential (i.e. lists) and named (i.e. dictionaries). For
+sequential data, each element is preceded by a dash and whitespace (e.g. `-
+item`); thus, it looks the way one would write a list in a plain-text e-mail,
+for instance. Named data consists of key-value pairs, where a colon and
+whitespace separate the key from the value (e.g. `key: value`); if the value is
+itself a nested structure, it can appear indented starting on the next line
+(same for list items). Primitive types (numbers, strings) are written the way
+one would write them naturally. In most cases, strings to not need to be quoted
+(but they can be); there are some exceptions though. Strings can contain
+Unicode symbols. For more details on the syntax, see the [YAML
+documentation](https://yaml.org/spec/1.2/spec.html).
+
+In the example above, the whole file encodes a named structure, with 3
+top-level items: `dataset`, `labels` and `categoricals`. The `dataset` item
+contains a single string, the name of a .csv file that contains the data to
+which this meta-data is associated. The `labels` item contains another named
+structure: key-value pairs of column names and associated labels. The last
+item, `categoricals`, contains information on the coding of certain variables
+(i.e., variables that are really categorical but have been assigned numeric
+codes in the dataset). When the data is presented in a table, these variables
+should be translated back to their original descriptive identifiers. Nested
+within the `categoricals` item is another named structure. Here, the names
+correspond to columns in the dataset, and the values are lists, whereby each
+list item relates a (numeric) code to its (string) identifier.
+
+(Note: currently this file needs to be written by hand, but in the future its
+generation could be partially or fully automated.)
+
+
+## Reading a dataset from its specification
+
+With the `data_spec.yaml` file above, we can use the `read_from_spec()`
+function to read the data and have it augmented with the meta-data from the
+spec file:
+
+```{r}
+# Read in the data from its 'spec'
+dat <- read_from_spec("data_spec.yaml")
+```
+
+Note that we did not need to include the name of the data file in our script,
+since it is contained in the spec.
+
+Before proceeding to describe the baseline characteristics of our study
+subjects, we need to make sure that each individual is only counted once. There
+is a convenience function for that:
+
+```{r}
+# Filter the data, one row per ID
+dat <- one_row_per_id(dat, "id")
+```
+
+Only columns that are invariant (and hence unambiguous) within each ID level
+are retained.
+
+Here are six random rows of the resulting dataset:
+
+```{r}
+dat[sample(1:nrow(dat), 6),]
+```
+
+Note that the categorical variables (which were numeric in the original .csv
+file) have been translated to factors, with the appropriate textual labels, and
+in the desired order. Compared to the corresponding R code that would be needed
+to achieve this, the YAML specification is much cleaner and more concise.
+Similarly for the label attributes.
+
+**Note on preserving label attributes**: in most cases, subsetting a
+`data.frame` results in the label attributes being stripped away. The function
+`subsetp()` ('p' for *preserve*) can be used to avoid this. (It is used
+internally in `one_row_per_id()`, for instance.)
+
+
+# Abbreviations in a footnote
+
+By convention, it is required that all abbreviations appearing in a table (or
+figure) be spelled out in full in a footnote. The package contains a mechanism
+for generating such footnotes in a convenient, semi-automated way. It uses a
+higher-order function (i.e., a function that returns a new function) called
+`make_abbrev_footnote()`. It again uses a YAML file (or a simple `list`), in
+this case to specify a complete list of abbreviations that can be drawn from.
+
+In this example, the current directory contains the file `abbrevs.yaml`, the
+contents of which are as follows:
+
+```yaml
+ALP  : alkaline phosphatase
+ALT  : alanine aminotransferase
+AST  : aspartate aminotransferase
+BMI  : body mass index
+BSA  : body surface area
+CrCL : creatinine clearance
+SD   : standard deviation
+CV   : coefficient of variation
+Max  : maximum
+Min  : minimum
+"N"  : number of subjects
+NCI  : National Cancer Institute
+FDA  : Food and Drug Administration
+```
+
+The meaning of this file is pretty self-explanatory.
+
+To use this file, we pass it's name to the function `make_abbrev_footnote()`,
+which returns a new function that now knows how to expand the abbreviations in
+the YAML file to generate a string that can be passed to the `footnote`
+argument of `table1()`.
+
+```{r}
+# Set up function for abbreviation footnotes
+abbrev_footnote <- make_abbrev_footnote("abbrevs.yaml")
+```
+
+We can test it out:
+
+```{r}
+abbrev_footnote("N", "FDA")
+```
+
+Note that in the result (by default), the abbreviations are sorted
+alphabetically. Thus, the idea is to identify the abbreviations that appear in
+the table, and pass them as string arguments (in any order) to the newly
+created `abbrev_footnote` function.
+
+# Tables of Baseline Characteristics
+
+To recap, so far our script has 3 lines of code:
+
+```{r}
+# Read in the data from its 'spec'
+dat <- read_from_spec("data_spec.yaml")
+
+# Filter the data, one row per ID
+dat <- one_row_per_id(dat, "id")
+
+# Set up function for abbreviation footnotes
+abbrev_footnote <- make_abbrev_footnote("abbrevs.yaml")
+```
+
+That is all we need to be able to start creating our tables! 
+
+The variables to include in the table are specified using a one-sided formula,
+with stratification denoted by conditioning (i.e., the name of the
+stratification variable appears to the right of a vertical bar).
+
+In this case, the data contains three studies, and the descriptive statistics
+are presented stratified by study, and overall. In general, if there are
+multiple studies it makes sense to stratify by study, and if there is a single
+study, there is usually some other variable that it makes sense to stratify on,
+like treatment arm or cohort.
+
+In this example, I have split the baseline characteristics into several tables
+by logical grouping, simply because there are too many of them to fit
+comfortably in a single table. The logical groups I have used are:
+
+  - Demographics
+  - Laboratory tests
+  - Study level covariates
+
+And here are the results:
+
+## Summary of Baseline Characteristics in the PK Population -- Demographic
+
+```{r}
+table1(~ sex + race + ethnic + age + agecat + wt + ht + bmi + bsa + fdarenal | study, data=dat,
+  footnote=abbrev_footnote("BMI", "BSA", "FDA", "SD", "Min", "Max", "N"))
+```
+
+## Summary of Baseline Characteristics in the PK Population -- Laboratory Tests
+
+```{r}
+table1(~ alb + alp + alt + ast + bili + crcl | study, data=dat,
+  footnote=abbrev_footnote("ALP", "ALT", "AST", "CrCL", "SD", "Min", "Max", "N"))
+```
+
+## Summary of Study Level Characteristics in the PK Population
+
+```{r}
+table1(~ hv + form + fasted | study, data=dat,
+  footnote=abbrev_footnote("N"))
+```
+
+For continuous variables, the arithmetic mean, standard deviation, median,
+coefficient of variation, minimum and maximum are displayed on 3 lines. For
+categorical variable the frequency and percentage (within each column) are
+shown, one line per category. Missing values, if any, will also be shown as
+count and percent. The following rounding rules are applied:
+
+  - All percentages are rounded to 1 decimal place, with the exception of 0%
+    and 100% which are simply shown as is.
+  - All other numbers are rounded to 3 significant digits. This includes
+    numbers bigger than 1000 (so 123,456 gets rounded to 123,000 for instance).
+  - A '5' digit is always rounded up. This is NOT the usual convention in R
+    (which follows the IEC 60559 standard), but IS the standard in Excel, for
+    instance.
+
+Continuous and categorical variables can be mixed in the same table (note that
+age and age category are next to each other).
+
+The above tables (including headings and footnotes) can be copied from the
+Chrome browser directly to a Word document (or Excel sheet). All formatting
+will be preserved (the one exception I have found is that in certain cases,
+superscripts or subscripts may be too small, so it might be necessary to reset
+the font site for the whole table to 10 pt). Pasting into PowerPoint works too,
+but does a less good a job at preserving the formatting, so it may be better to
+paste to a Word document first, and then copy that to PowerPoint (use the "Keep
+Source Formatting" option when pasting).
+
+The complete example can be found on GitHub.
+
+# R session information
+
+```{r}
+sessionInfo()
+```
+
+<!--- vim: ts=2 sw=2 et : --->
+

@@ -1,0 +1,16 @@
+Package: table1c
+Type: Package
+Version: 0.8
+Date: 2020-06-30
+Title: Tables of Descriptive Statistics
+Authors@R: person("Benjamin", "Rich", role=c("aut", "cre", "cph"), email="mail@benjaminrich.net")
+URL: https://github.com/certara/table1c
+BugReports: https://github.com/certara/table1c/issues
+Description: A light wrapper around the table1 package with some customizations
+    for the convenience of Certara IDD.
+License: GPL-3
+Depends: table1 (>= 1.2)
+Imports: knitr,htmltools,yaml
+Suggests: nlme
+VignetteBuilder: knitr
+RoxygenNote: 7.1.0
