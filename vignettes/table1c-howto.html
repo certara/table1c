@@ -316,7 +316,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <li><a href="#tables-of-baseline-characteristics">Tables of Baseline Characteristics</a><ul>
 <li><a href="#summary-of-baseline-characteristics-in-the-pk-population-demographic">Summary of Baseline Characteristics in the PK Population – Demographic</a></li>
 <li><a href="#summary-of-baseline-characteristics-in-the-pk-population-laboratory-tests">Summary of Baseline Characteristics in the PK Population – Laboratory Tests</a></li>
-<li><a href="#summary-of-study-level-characteristics-in-the-pk-population">Summary of Study Level Characteristics in the PK Population</a></li>
 </ul></li>
 <li><a href="#r-session-information">R session information</a></li>
 </ul>
@@ -325,7 +324,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>The <code>table1c</code> package is a light wrapper around the package <a href="https://CRAN.R-project.org/package=table1">table1</a>, with some customizations for the convenience of Certara IDD.</p>
-<p>This vignette serves as User Guide for the package. We run through an example using a simulated dataset <code>Xyz-pk.csv</code> with data pooled from three hypothetical studies. This dataset is in the style of a NONMEM PopPK dataset. Click <a href="Xyz-pk.csv">here</a> to download it (note: due to a <a href="https://stackoverflow.com/questions/56761809/downloading-opening-csv-file-using-google-chrome-it-changes-extension-of-csv">Chrome bug</a> the file may download with a .xls extension, which is incorrect; find the file where it was saved and change it to .csv).</p>
+<p>This vignette serves as User Guide for the package. We run through an example using a simulated dataset Xyz‑pk.csv with data pooled from three hypothetical studies. This dataset is in the style of a NONMEM PopPK dataset. Click <a href="Xyz-pk.csv">here</a> to download it (note: due to a <a href="https://stackoverflow.com/questions/56761809/downloading-opening-csv-file-using-google-chrome-it-changes-extension-of-csv">Chrome bug</a> the file may download with a .xls extension, which is incorrect; find the file where it was saved and change it to .csv).</p>
 <p>(<strong>Note:</strong> The dataset has column names in all lower case letters, versus the more traditional upper case used in NONMEM. This is preferred because we end up typing these names a lot, and by avoiding the strain of multi-key combinations needed for capital letters it is not only faster to type, but also decreases the risk of <a href="https://www.nhs.uk/live-well/healthy-body/tips-to-prevent-rsi/">repetitive strain injury</a>.)</p>
 </div>
 <div id="using-a-data-specification-file" class="section level1">
@@ -345,7 +344,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb1-4" title="4">  <span class="fu">sex:</span><span class="at">       Sex</span></a>
 <a class="sourceLine" id="cb1-5" title="5">  <span class="fu">race:</span><span class="at">      Race</span></a>
 <a class="sourceLine" id="cb1-6" title="6">  <span class="fu">ethnic:</span><span class="at">    Ethnicity</span></a>
-<a class="sourceLine" id="cb1-7" title="7">  <span class="fu">hv:</span><span class="at">        Healthy Volunteer</span></a>
+<a class="sourceLine" id="cb1-7" title="7">  <span class="fu">hv:</span><span class="at">        Health Status</span></a>
 <a class="sourceLine" id="cb1-8" title="8">  <span class="fu">age:</span><span class="at">       Age (y)</span></a>
 <a class="sourceLine" id="cb1-9" title="9">  <span class="fu">agecat:</span><span class="at">    Age Group</span></a>
 <a class="sourceLine" id="cb1-10" title="10">  <span class="fu">wt:</span><span class="at">        Body Weight (kg)</span></a>
@@ -462,8 +461,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb6-9" title="9"><span class="fu">Max  :</span><span class="at"> maximum</span></a>
 <a class="sourceLine" id="cb6-10" title="10"><span class="fu">Min  :</span><span class="at"> minimum</span></a>
 <a class="sourceLine" id="cb6-11" title="11"><span class="fu">&quot;N&quot;  :</span><span class="at"> number of subjects</span></a>
-<a class="sourceLine" id="cb6-12" title="12"><span class="fu">NCI  :</span><span class="at"> National Cancer Institute</span></a>
-<a class="sourceLine" id="cb6-13" title="13"><span class="fu">FDA  :</span><span class="at"> Food and Drug Administration</span></a></code></pre></div>
+<a class="sourceLine" id="cb6-12" title="12"><span class="fu">FDA  :</span><span class="at"> Food and Drug Administration</span></a></code></pre></div>
 <p>The meaning of this file is pretty self-explanatory.</p>
 <p>To use this file, we pass it’s name to the function <code>make_abbrev_footnote()</code>, which returns a new function that now knows how to expand the abbreviations in the YAML file to generate a string that can be passed to the <code>footnote</code> argument of <code>table1()</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co"># Set up function for abbreviation footnotes</span></a>
@@ -487,17 +485,16 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>That is all we need to be able to start creating our tables!</p>
 <p>The variables to include in the table are specified using a one-sided formula, with stratification denoted by conditioning (i.e., the name of the stratification variable appears to the right of a vertical bar).</p>
 <p>In this case, the data contains three studies, and the descriptive statistics are presented stratified by study, and overall. In general, if there are multiple studies it makes sense to stratify by study, and if there is a single study, there is usually some other variable that it makes sense to stratify on, like treatment arm or cohort.</p>
-<p>In this example, I have split the baseline characteristics into several tables by logical grouping, simply because there are too many of them to fit comfortably in a single table. The logical groups I have used are:</p>
+<p>In this example, I have split the baseline characteristics into two tables by logical grouping, simply because there are too many of them to fit comfortably in a single table. The logical groups I have used are:</p>
 <ul>
 <li>Demographics</li>
 <li>Laboratory tests</li>
-<li>Study level covariates</li>
 </ul>
 <p>And here are the results:</p>
 <div id="summary-of-baseline-characteristics-in-the-pk-population-demographic" class="section level2">
 <h2>Summary of Baseline Characteristics in the PK Population – Demographic</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">table1</span>(<span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>ethnic <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>agecat <span class="op">+</span><span class="st"> </span>wt <span class="op">+</span><span class="st"> </span>ht <span class="op">+</span><span class="st"> </span>bmi <span class="op">+</span><span class="st"> </span>bsa <span class="op">+</span><span class="st"> </span>fdarenal <span class="op">|</span><span class="st"> </span>study, <span class="dt">data=</span>dat,</a>
-<a class="sourceLine" id="cb11-2" title="2">  <span class="dt">footnote=</span><span class="kw">abbrev_footnote</span>(<span class="st">&quot;BMI&quot;</span>, <span class="st">&quot;BSA&quot;</span>, <span class="st">&quot;FDA&quot;</span>, <span class="st">&quot;SD&quot;</span>, <span class="st">&quot;Min&quot;</span>, <span class="st">&quot;Max&quot;</span>, <span class="st">&quot;N&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">table1</span>(<span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>ethnic <span class="op">+</span><span class="st"> </span>hv <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>agecat <span class="op">+</span><span class="st"> </span>wt <span class="op">+</span><span class="st"> </span>ht <span class="op">+</span><span class="st"> </span>bmi <span class="op">+</span><span class="st"> </span>bsa <span class="op">|</span><span class="st"> </span>study, <span class="dt">data=</span>dat,</a>
+<a class="sourceLine" id="cb11-2" title="2">  <span class="dt">footnote=</span><span class="kw">abbrev_footnote</span>(<span class="st">&quot;BMI&quot;</span>, <span class="st">&quot;BSA&quot;</span>, <span class="st">&quot;SD&quot;</span>, <span class="st">&quot;Min&quot;</span>, <span class="st">&quot;Max&quot;</span>, <span class="st">&quot;N&quot;</span>))</a></code></pre></div>
 <div class="Rtable1"><table class="Rtable1">
 <thead>
 <tr>
@@ -606,6 +603,27 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <td class='lastrow'>3 (7.0%)</td>
 <td class='lastrow'>9 (8.1%)</td>
 <td class='lastrow'>12 (7.1%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'><span class='varlabel'>Health Status</span></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Healthy Subject</td>
+<td>16 (100%)</td>
+<td>0 (0%)</td>
+<td>0 (0%)</td>
+<td>16 (9.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Patient</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>43 (100%)</td>
+<td class='lastrow'>111 (100%)</td>
+<td class='lastrow'>154 (90.6%)</td>
 </tr>
 <tr>
 <td class='rowlabel firstrow'><span class='varlabel'>Age (y)</span></td>
@@ -768,50 +786,15 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <td class='lastrow'>[1.25, 2.32]</td>
 <td class='lastrow'>[1.25, 2.41]</td>
 </tr>
-<tr>
-<td class='rowlabel firstrow'><span class='varlabel'>Renal Impairment, FDA Classification</span></td>
-<td class='firstrow'></td>
-<td class='firstrow'></td>
-<td class='firstrow'></td>
-<td class='firstrow'></td>
-</tr>
-<tr>
-<td class='rowlabel'>Normal</td>
-<td>16 (100%)</td>
-<td>1 (2.3%)</td>
-<td>76 (68.5%)</td>
-<td>93 (54.7%)</td>
-</tr>
-<tr>
-<td class='rowlabel'>Mild</td>
-<td>0 (0%)</td>
-<td>8 (18.6%)</td>
-<td>25 (22.5%)</td>
-<td>33 (19.4%)</td>
-</tr>
-<tr>
-<td class='rowlabel'>Moderate</td>
-<td>0 (0%)</td>
-<td>30 (69.8%)</td>
-<td>10 (9.0%)</td>
-<td>40 (23.5%)</td>
-</tr>
-<tr>
-<td class='rowlabel lastrow'>Severe</td>
-<td class='lastrow'>0 (0%)</td>
-<td class='lastrow'>4 (9.3%)</td>
-<td class='lastrow'>0 (0%)</td>
-<td class='lastrow'>4 (2.4%)</td>
-</tr>
 </tbody>
 </table>
-<p class="Rtable1-footnote">BMI=body mass index; BSA=body surface area; FDA=Food and Drug Administration; Max=maximum; Min=minimum; N=number of subjects; SD=standard deviation.</p>
+<p class="Rtable1-footnote">BMI=body mass index; BSA=body surface area; Max=maximum; Min=minimum; N=number of subjects; SD=standard deviation.</p>
 </div>
 </div>
 <div id="summary-of-baseline-characteristics-in-the-pk-population-laboratory-tests" class="section level2">
 <h2>Summary of Baseline Characteristics in the PK Population – Laboratory Tests</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">table1</span>(<span class="op">~</span><span class="st"> </span>alb <span class="op">+</span><span class="st"> </span>alp <span class="op">+</span><span class="st"> </span>alt <span class="op">+</span><span class="st"> </span>ast <span class="op">+</span><span class="st"> </span>bili <span class="op">+</span><span class="st"> </span>crcl <span class="op">|</span><span class="st"> </span>study, <span class="dt">data=</span>dat,</a>
-<a class="sourceLine" id="cb12-2" title="2">  <span class="dt">footnote=</span><span class="kw">abbrev_footnote</span>(<span class="st">&quot;ALP&quot;</span>, <span class="st">&quot;ALT&quot;</span>, <span class="st">&quot;AST&quot;</span>, <span class="st">&quot;CrCL&quot;</span>, <span class="st">&quot;SD&quot;</span>, <span class="st">&quot;Min&quot;</span>, <span class="st">&quot;Max&quot;</span>, <span class="st">&quot;N&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">table1</span>(<span class="op">~</span><span class="st"> </span>alb <span class="op">+</span><span class="st"> </span>alp <span class="op">+</span><span class="st"> </span>alt <span class="op">+</span><span class="st"> </span>ast <span class="op">+</span><span class="st"> </span>bili <span class="op">+</span><span class="st"> </span>crcl <span class="op">+</span><span class="st"> </span>fdarenal <span class="op">|</span><span class="st"> </span>study, <span class="dt">data=</span>dat,</a>
+<a class="sourceLine" id="cb12-2" title="2">  <span class="dt">footnote=</span><span class="kw">abbrev_footnote</span>(<span class="st">&quot;ALP&quot;</span>, <span class="st">&quot;ALT&quot;</span>, <span class="st">&quot;AST&quot;</span>, <span class="st">&quot;CrCL&quot;</span>, <span class="st">&quot;FDA&quot;</span>, <span class="st">&quot;SD&quot;</span>, <span class="st">&quot;Min&quot;</span>, <span class="st">&quot;Max&quot;</span>, <span class="st">&quot;N&quot;</span>))</a></code></pre></div>
 <div class="Rtable1"><table class="Rtable1">
 <thead>
 <tr>
@@ -991,105 +974,50 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <td class='lastrow'>[38.2, 233]</td>
 <td class='lastrow'>[18.5, 233]</td>
 </tr>
-</tbody>
-</table>
-<p class="Rtable1-footnote">ALP=alkaline phosphatase; ALT=alanine aminotransferase; AST=aspartate aminotransferase; CrCL=creatinine clearance; Max=maximum; Min=minimum; N=number of subjects; SD=standard deviation.</p>
-</div>
-</div>
-<div id="summary-of-study-level-characteristics-in-the-pk-population" class="section level2">
-<h2>Summary of Study Level Characteristics in the PK Population</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">table1</span>(<span class="op">~</span><span class="st"> </span>hv <span class="op">+</span><span class="st"> </span>form <span class="op">+</span><span class="st"> </span>fasted <span class="op">|</span><span class="st"> </span>study, <span class="dt">data=</span>dat,</a>
-<a class="sourceLine" id="cb13-2" title="2">  <span class="dt">footnote=</span><span class="kw">abbrev_footnote</span>(<span class="st">&quot;N&quot;</span>))</a></code></pre></div>
-<div class="Rtable1"><table class="Rtable1">
-<thead>
 <tr>
-<th class='rowlabel firstrow lastrow'></th>
-<th class='firstrow lastrow'><span class='stratlabel'>Xyz-hv-01<br><span class='stratn'>(N=16)</span></span></th>
-<th class='firstrow lastrow'><span class='stratlabel'>Xyz-ri-02<br><span class='stratn'>(N=43)</span></span></th>
-<th class='firstrow lastrow'><span class='stratlabel'>Xyz-ph3-07<br><span class='stratn'>(N=111)</span></span></th>
-<th class='firstrow lastrow'><span class='stratlabel'>Overall<br><span class='stratn'>(N=170)</span></span></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class='rowlabel firstrow'><span class='varlabel'>Healthy Volunteer</span></td>
+<td class='rowlabel firstrow'><span class='varlabel'>Renal Impairment, FDA Classification</span></td>
 <td class='firstrow'></td>
 <td class='firstrow'></td>
 <td class='firstrow'></td>
 <td class='firstrow'></td>
 </tr>
 <tr>
-<td class='rowlabel'>Healthy Subject</td>
+<td class='rowlabel'>Normal</td>
 <td>16 (100%)</td>
-<td>0 (0%)</td>
-<td>0 (0%)</td>
-<td>16 (9.4%)</td>
+<td>1 (2.3%)</td>
+<td>76 (68.5%)</td>
+<td>93 (54.7%)</td>
 </tr>
 <tr>
-<td class='rowlabel lastrow'>Patient</td>
+<td class='rowlabel'>Mild</td>
+<td>0 (0%)</td>
+<td>8 (18.6%)</td>
+<td>25 (22.5%)</td>
+<td>33 (19.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Moderate</td>
+<td>0 (0%)</td>
+<td>30 (69.8%)</td>
+<td>10 (9.0%)</td>
+<td>40 (23.5%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Severe</td>
 <td class='lastrow'>0 (0%)</td>
-<td class='lastrow'>43 (100%)</td>
-<td class='lastrow'>111 (100%)</td>
-<td class='lastrow'>154 (90.6%)</td>
-</tr>
-<tr>
-<td class='rowlabel firstrow'><span class='varlabel'>Formulation</span></td>
-<td class='firstrow'></td>
-<td class='firstrow'></td>
-<td class='firstrow'></td>
-<td class='firstrow'></td>
-</tr>
-<tr>
-<td class='rowlabel'>Capsule</td>
-<td>16 (100%)</td>
-<td>0 (0%)</td>
-<td>0 (0%)</td>
-<td>16 (9.4%)</td>
-</tr>
-<tr>
-<td class='rowlabel lastrow'>Tablet</td>
+<td class='lastrow'>4 (9.3%)</td>
 <td class='lastrow'>0 (0%)</td>
-<td class='lastrow'>43 (100%)</td>
-<td class='lastrow'>111 (100%)</td>
-<td class='lastrow'>154 (90.6%)</td>
-</tr>
-<tr>
-<td class='rowlabel firstrow'><span class='varlabel'>Fasting Status</span></td>
-<td class='firstrow'></td>
-<td class='firstrow'></td>
-<td class='firstrow'></td>
-<td class='firstrow'></td>
-</tr>
-<tr>
-<td class='rowlabel'>Fed</td>
-<td>16 (100%)</td>
-<td>18 (41.9%)</td>
-<td>0 (0%)</td>
-<td>34 (20.0%)</td>
-</tr>
-<tr>
-<td class='rowlabel'>Fasted</td>
-<td>0 (0%)</td>
-<td>25 (58.1%)</td>
-<td>0 (0%)</td>
-<td>25 (14.7%)</td>
-</tr>
-<tr>
-<td class='rowlabel lastrow'>Unknown</td>
-<td class='lastrow'>0 (0%)</td>
-<td class='lastrow'>0 (0%)</td>
-<td class='lastrow'>111 (100%)</td>
-<td class='lastrow'>111 (65.3%)</td>
+<td class='lastrow'>4 (2.4%)</td>
 </tr>
 </tbody>
 </table>
-<p class="Rtable1-footnote">N=number of subjects.</p>
+<p class="Rtable1-footnote">ALP=alkaline phosphatase; ALT=alanine aminotransferase; AST=aspartate aminotransferase; CrCL=creatinine clearance; FDA=Food and Drug Administration; Max=maximum; Min=minimum; N=number of subjects; SD=standard deviation.</p>
 </div>
 <p>For continuous variables, the arithmetic mean, standard deviation, median, coefficient of variation, minimum and maximum are displayed on 3 lines. For categorical variable the frequency and percentage (within each column) are shown, one line per category. Missing values, if any, will also be shown as count and percent. The following rounding rules are applied:</p>
 <ul>
 <li>All percentages are rounded to 1 decimal place, with the exception of 0% and 100% which are simply shown as is.</li>
-<li>All other numbers are rounded to 3 significant digits. This includes numbers bigger than 1000 (so 123,456 gets rounded to 123,000 for instance).</li>
-<li>A ‘5’ digit is always rounded up. This is NOT the usual convention in R (which follows the IEC 60559 standard), but IS the standard in Excel, for instance.</li>
+<li>All other numbers are rounded to 3 significant digits. This includes numbers bigger than 1,000 (so 123,456 gets rounded to 123,000 for instance).</li>
+<li>A ‘5’ digit is always rounded up. This is NOT the usual convention in R (which follows the IEC 60559 standard), but is the standard in SAS and Excel, for instance.</li>
 </ul>
 <p>Continuous and categorical variables can be mixed in the same table (note that age and age category are next to each other).</p>
 <p>The above tables (including headings and footnotes) can be copied from the Chrome browser directly to a Word document (or Excel sheet). All formatting will be preserved (the one exception I have found is that in certain cases, superscripts or subscripts may be too small, so it might be necessary to reset the font site for the whole table to 10 pt). Pasting into PowerPoint works too, but does a less good a job at preserving the formatting, so it may be better to paste to a Word document first, and then copy that to PowerPoint (use the “Keep Source Formatting” option when pasting).</p>
@@ -1098,7 +1026,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 <div id="r-session-information" class="section level1">
 <h1>R session information</h1>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">sessionInfo</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">sessionInfo</span>()</a></code></pre></div>
 <pre><code>## R version 4.0.1 (2020-06-06)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
 ## Running under: Windows 10 x64 (build 16299)

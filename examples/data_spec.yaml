@@ -4,7 +4,7 @@ labels:
   sex:       Sex
   race:      Race
   ethnic:    Ethnicity
-  hv:        Healthy Volunteer
+  hv:        Health Status
   age:       Age (y)
   agecat:    Age Group
   wt:        Body Weight (kg)

@@ -24,18 +24,13 @@ abbrev_footnote <- make_abbrev_footnote("abbrevs.yaml")
 
 #' ## Summary of Baseline Characteristics in the PK Population -- Demographic
 
-table1(~ sex + race + ethnic + age + agecat + wt + ht + bmi + bsa + fdarenal | study, data=dat,
-  footnote=abbrev_footnote("BMI", "BSA", "FDA", "SD", "Min", "Max", "N"))
+table1(~ sex + race + ethnic + hv + age + agecat + wt + ht + bmi + bsa | study, data=dat,
+  footnote=abbrev_footnote("BMI", "BSA", "SD", "Min", "Max", "N"))
 
 #' ## Summary of Baseline Characteristics in the PK Population -- Laboratory Tests
 
-table1(~ alb + alp + alt + ast + bili + crcl | study, data=dat,
-  footnote=abbrev_footnote("ALP", "ALT", "AST", "CrCL", "SD", "Min", "Max", "N"))
-
-#' ## Summary of Study Level Characteristics in the PK Population
-
-table1(~ hv + form + fasted | study, data=dat,
-  footnote=abbrev_footnote("N"))
+table1(~ alb + alp + alt + ast + bili + crcl + fdarenal | study, data=dat,
+  footnote=abbrev_footnote("ALP", "ALT", "AST", "CrCL", "FDA", "SD", "Min", "Max", "N"))
 
 #' # R session information
 

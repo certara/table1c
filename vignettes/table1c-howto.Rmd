@@ -26,7 +26,7 @@ The `table1c` package is a light wrapper around the package
 customizations for the convenience of Certara IDD.
 
 This vignette serves as User Guide for the package. We run through an example
-using a simulated dataset `Xyz-pk.csv` with data pooled from three hypothetical
+using a simulated dataset Xyz&#x2011;pk.csv with data pooled from three hypothetical
 studies. This dataset is in the style of a NONMEM PopPK dataset. Click
 [here](Xyz-pk.csv) to download it (note: due to a [Chrome
 bug](https://stackoverflow.com/questions/56761809/downloading-opening-csv-file-using-google-chrome-it-changes-extension-of-csv)
@@ -75,7 +75,7 @@ labels:
   sex:       Sex
   race:      Race
   ethnic:    Ethnicity
-  hv:        Healthy Volunteer
+  hv:        Health Status
   age:       Age (y)
   agecat:    Age Group
   wt:        Body Weight (kg)
@@ -231,7 +231,6 @@ CV   : coefficient of variation
 Max  : maximum
 Min  : minimum
 "N"  : number of subjects
-NCI  : National Cancer Institute
 FDA  : Food and Drug Administration
 ```
 
@@ -285,35 +284,27 @@ multiple studies it makes sense to stratify by study, and if there is a single
 study, there is usually some other variable that it makes sense to stratify on,
 like treatment arm or cohort.
 
-In this example, I have split the baseline characteristics into several tables
+In this example, I have split the baseline characteristics into two tables
 by logical grouping, simply because there are too many of them to fit
 comfortably in a single table. The logical groups I have used are:
 
   - Demographics
   - Laboratory tests
-  - Study level covariates
 
 And here are the results:
 
 ## Summary of Baseline Characteristics in the PK Population -- Demographic
 
 ```{r}
-table1(~ sex + race + ethnic + age + agecat + wt + ht + bmi + bsa + fdarenal | study, data=dat,
-  footnote=abbrev_footnote("BMI", "BSA", "FDA", "SD", "Min", "Max", "N"))
+table1(~ sex + race + ethnic + hv + age + agecat + wt + ht + bmi + bsa | study, data=dat,
+  footnote=abbrev_footnote("BMI", "BSA", "SD", "Min", "Max", "N"))
 ```
 
 ## Summary of Baseline Characteristics in the PK Population -- Laboratory Tests
 
 ```{r}
-table1(~ alb + alp + alt + ast + bili + crcl | study, data=dat,
-  footnote=abbrev_footnote("ALP", "ALT", "AST", "CrCL", "SD", "Min", "Max", "N"))
-```
-
-## Summary of Study Level Characteristics in the PK Population
-
-```{r}
-table1(~ hv + form + fasted | study, data=dat,
-  footnote=abbrev_footnote("N"))
+table1(~ alb + alp + alt + ast + bili + crcl + fdarenal | study, data=dat,
+  footnote=abbrev_footnote("ALP", "ALT", "AST", "CrCL", "FDA", "SD", "Min", "Max", "N"))
 ```
 
 For continuous variables, the arithmetic mean, standard deviation, median,
@@ -325,10 +316,10 @@ count and percent. The following rounding rules are applied:
   - All percentages are rounded to 1 decimal place, with the exception of 0%
     and 100% which are simply shown as is.
   - All other numbers are rounded to 3 significant digits. This includes
-    numbers bigger than 1000 (so 123,456 gets rounded to 123,000 for instance).
+    numbers bigger than 1,000 (so 123,456 gets rounded to 123,000 for instance).
   - A '5' digit is always rounded up. This is NOT the usual convention in R
-    (which follows the IEC 60559 standard), but IS the standard in Excel, for
-    instance.
+    (which follows the IEC 60559 standard), but is the standard in SAS and
+    Excel, for instance.
 
 Continuous and categorical variables can be mixed in the same table (note that
 age and age category are next to each other).
@@ -343,7 +334,6 @@ paste to a Word document first, and then copy that to PowerPoint (use the "Keep
 Source Formatting" option when pasting).
 
 The complete example can be found on [GitHub](https://github.com/certara/table1c/tree/master/examples).
-
 
 # R session information
 
