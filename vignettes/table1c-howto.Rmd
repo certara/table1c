@@ -342,7 +342,8 @@ but does a less good a job at preserving the formatting, so it may be better to
 paste to a Word document first, and then copy that to PowerPoint (use the "Keep
 Source Formatting" option when pasting).
 
-The complete example can be found on GitHub.
+The complete example can be found on [GitHub](https://github.com/certara/table1c/tree/master/examples).
+
 
 # R session information
 
