@@ -1,8 +1,8 @@
 # table1c
 
 An R package for generating tables of descriptive statistics in HTML. It is
-a light wrapper around the table1 package with some customizations for the
-convenience of Certara IDD.
+a light wrapper around the [table1](https://CRAN.R-project.org/package=table1)
+package with some customizations for the convenience of Certara IDD.
 
 ## Installation
 
