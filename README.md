@@ -10,7 +10,8 @@ This package needs to be installed from GitHub:
 
 ``` r
 require(remotes)
-remotes::install_github("certara/table1c")
+Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS="true")
+remotes::install_github("certara/table1c", upgrade="never")
 ```
 
 ## Usage
