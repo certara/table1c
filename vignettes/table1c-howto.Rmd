@@ -133,17 +133,32 @@ categoricals:
 
 The meaning of the file contents is intuitively clear. Indentation is used to
 denote hierarchical structure. Line breaks separate items from each other.
-Other whitespace is mostly ignored (except inside strings). Data structures
-come in 2 forms: sequential (i.e. lists) and named (i.e. dictionaries). For
-sequential data, each element is preceded by a dash and whitespace (e.g. `-
-item`); thus, it looks the way one would write a list in a plain-text e-mail,
-for instance. Named data consists of key-value pairs, where a colon and
-whitespace separate the key from the value (e.g. `key: value`); if the value is
-itself a nested structure, it can appear indented starting on the next line
-(same for list items). Primitive types (numbers, strings) are written the way
-one would write them naturally. In most cases, strings to not need to be quoted
-(but they can be); there are some exceptions though. Strings can contain
-Unicode symbols. For more details on the syntax, see the [YAML
+Space are used to indent things, and other than that spaces are basically
+ignored (except inside strings). 
+
+<div style="border: red solid 1.5pt; border-radius: 25px; padding: 0.05in 0.25in; margin: 0.25in 0;">
+**Warning:** Make sure you are not using _tabs_ instead of _spaces_; it can be
+hard to tell, and YAML is sensitive to this difference. 
+If you have an error when reading the file, this is something to check. 
+Most editor programs have a setting that will cause the tab key to insert
+a number of spaces instead of a tab character (RStudio does under
+'Tools>Global&nbsp;Options>Code>Editing>General'). Some also have a feature
+that allows you to "see" the whitespace characters (in RStudio it's in
+'Tools>Global&nbsp;Options>Code>Display>General') which can help to debug the
+problem.
+</div>
+
+Data structures come in 2 forms: sequential (i.e. lists) and named (i.e.
+dictionaries). For sequential data, each element is preceded by a dash and
+whitespace (don't use _tabs_) (e.g. `- item`); thus, it looks the way one would
+write a list in a plain-text e-mail, for instance. Named data consists of
+key-value pairs, where a colon and whitespace (don't use _tabs_) separate the
+key from the value (e.g. `key: value`); if the value is itself a nested
+structure, it can appear indented starting on the next line (same for list
+items). Primitive types (numbers, strings) are written the way one would write
+them naturally. In most cases, strings to not need to be quoted (but they can
+be); there are some exceptions though. Strings can contain Unicode symbols. For
+more details on the syntax, see the [YAML
 documentation](https://yaml.org/spec/1.2/spec.html).
 
 In the example above, the whole file encodes a named structure, with 3

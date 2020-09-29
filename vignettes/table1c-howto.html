@@ -301,7 +301,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">User Guide: How to Create Tables of Baseline Characteristics (Descriptive Statistics)</h1>
 <h4 class="author">Certara PMxO R Tools Workstream</h4>
-<h4 class="date">02-Jul-2020</h4>
+<h4 class="date">29-Sep-2020</h4>
 
 
 <div id="TOC">
@@ -398,7 +398,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb1-58" title="58">    <span class="kw">-</span> <span class="fu">0:</span><span class="at"> Fed</span></a>
 <a class="sourceLine" id="cb1-59" title="59">    <span class="kw">-</span> <span class="fu">1:</span><span class="at"> Fasted</span></a>
 <a class="sourceLine" id="cb1-60" title="60">    <span class="kw">-</span> <span class="fu">-99:</span><span class="at"> Unknown</span></a></code></pre></div>
-<p>The meaning of the file contents is intuitively clear. Indentation is used to denote hierarchical structure. Line breaks separate items from each other. Other whitespace is mostly ignored (except inside strings). Data structures come in 2 forms: sequential (i.e. lists) and named (i.e. dictionaries). For sequential data, each element is preceded by a dash and whitespace (e.g. <code>- item</code>); thus, it looks the way one would write a list in a plain-text e-mail, for instance. Named data consists of key-value pairs, where a colon and whitespace separate the key from the value (e.g. <code>key: value</code>); if the value is itself a nested structure, it can appear indented starting on the next line (same for list items). Primitive types (numbers, strings) are written the way one would write them naturally. In most cases, strings to not need to be quoted (but they can be); there are some exceptions though. Strings can contain Unicode symbols. For more details on the syntax, see the <a href="https://yaml.org/spec/1.2/spec.html">YAML documentation</a>.</p>
+<p>The meaning of the file contents is intuitively clear. Indentation is used to denote hierarchical structure. Line breaks separate items from each other. Space are used to indent things, and other than that spaces are basically ignored (except inside strings).</p>
+<div style="border: red solid 1.5pt; border-radius: 25px; padding: 0.05in 0.25in; margin: 0.25in 0;">
+<p><strong>Warning:</strong> Make sure you are not using <em>tabs</em> instead of <em>spaces</em>; it can be hard to tell, and YAML is sensitive to this difference. If you have an error when reading the file, this is something to check. Most editor programs have a setting that will cause the tab key to insert a number of spaces instead of a tab character (RStudio does under ‘Tools&gt;Global Options&gt;Code&gt;Editing&gt;General’). Some also have a feature that allows you to “see” the whitespace characters (in RStudio it’s in ‘Tools&gt;Global Options&gt;Code&gt;Display&gt;General’) which can help to debug the problem.</p>
+</div>
+<p>Data structures come in 2 forms: sequential (i.e. lists) and named (i.e. dictionaries). For sequential data, each element is preceded by a dash and whitespace (don’t use <em>tabs</em>) (e.g. <code>- item</code>); thus, it looks the way one would write a list in a plain-text e-mail, for instance. Named data consists of key-value pairs, where a colon and whitespace (don’t use <em>tabs</em>) separate the key from the value (e.g. <code>key: value</code>); if the value is itself a nested structure, it can appear indented starting on the next line (same for list items). Primitive types (numbers, strings) are written the way one would write them naturally. In most cases, strings to not need to be quoted (but they can be); there are some exceptions though. Strings can contain Unicode symbols. For more details on the syntax, see the <a href="https://yaml.org/spec/1.2/spec.html">YAML documentation</a>.</p>
 <p>In the example above, the whole file encodes a named structure, with 3 top-level items: <code>dataset</code>, <code>labels</code> and <code>categoricals</code>. The <code>dataset</code> item contains a single string, the name of a .csv file that contains the data to which this meta-data is associated. The <code>labels</code> item contains another named structure: key-value pairs of column names and associated labels. The last item, <code>categoricals</code>, contains information on the coding of certain variables (i.e., variables that are really categorical but have been assigned numeric codes in the dataset). When the data is presented in a table, these variables should be translated back to their original descriptive identifiers. Nested within the <code>categoricals</code> item is another named structure. Here, the names correspond to columns in the dataset, and the values are lists, whereby each list item relates a (numeric) code to its (string) identifier.</p>
 <p>(Note: currently this file needs to be written by hand, but in the future its generation could be partially or fully automated.)</p>
 </div>
@@ -1029,7 +1033,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">sessionInfo</span>()</a></code></pre></div>
 <pre><code>## R version 4.0.1 (2020-06-06)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 16299)
+## Running under: Windows 10 x64 (build 18363)
 ## 
 ## Matrix products: default
 ## 
@@ -1044,21 +1048,13 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] table1c_0.8    devtools_2.3.0 usethis_1.6.1  table1_1.2     rmarkdown_2.2 
-## [6] nvimcom_0.9-92
+## [1] table1c_0.1     table1_1.2      rmarkdown_2.2   nvimcom_0.9-102
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.4.6      compiler_4.0.1    prettyunits_1.1.1 remotes_2.1.1    
-##  [5] tools_4.0.1       testthat_2.3.2    digest_0.6.25     pkgbuild_1.0.8   
-##  [9] pkgload_1.1.0     evaluate_0.14     memoise_1.1.0     rlang_0.4.6      
-## [13] cli_2.0.2         rstudioapi_0.11   yaml_2.2.1        xopen_1.0.0      
-## [17] xfun_0.14         xml2_1.3.2        roxygen2_7.1.0    withr_2.2.0      
-## [21] stringr_1.4.0     knitr_1.28        desc_1.2.0        fs_1.4.1         
-## [25] rprojroot_1.3-2   glue_1.4.1        R6_2.4.1          processx_3.4.2   
-## [29] fansi_0.4.1       rcmdcheck_1.3.3   sessioninfo_1.1.1 Formula_1.2-3    
-## [33] purrr_0.3.4       callr_3.4.3       magrittr_1.5      backports_1.1.7  
-## [37] ps_1.3.3          ellipsis_0.3.1    htmltools_0.4.0   assertthat_0.2.1 
-## [41] stringi_1.4.6     crayon_1.3.4</code></pre>
+##  [1] compiler_4.0.1  magrittr_1.5    htmltools_0.5.0 tools_4.0.1    
+##  [5] yaml_2.2.1      stringi_1.4.6   knitr_1.28      Formula_1.2-3  
+##  [9] stringr_1.4.0   xfun_0.14       digest_0.6.25   rlang_0.4.6    
+## [13] evaluate_0.14</code></pre>
 <!--- vim: ts=2 sw=2 et : --->
 </div>
 
