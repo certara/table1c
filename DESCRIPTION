@@ -10,6 +10,11 @@ Description: A light wrapper around the table1 package with some customizations
     for the convenience of Certara IDD.
 License: GPL-3
 Depends: table1 (>= 1.2)
-Imports: knitr,htmltools,yaml
-Suggests: nlme
+Imports:
+    knitr,
+    htmltools,
+    yaml
+Suggests:
+    nlme,
+    rmarkdown
 VignetteBuilder: knitr
