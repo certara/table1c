@@ -13,4 +13,3 @@ Depends: table1 (>= 1.2)
 Imports: knitr,htmltools,yaml
 Suggests: nlme
 VignetteBuilder: knitr
-RoxygenNote: 7.1.0
